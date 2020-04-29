@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FingerPrintApi", "FingerPri
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FingerprintCore", "FingerprintCore\FingerprintCore.csproj", "{FDC81CD6-9884-4245-A80E-828A2E2D9DF5}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTestProject", "UnitTestProject\UnitTestProject.csproj", "{892AE768-09B7-48F8-A864-728AB9EA4C78}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{FDC81CD6-9884-4245-A80E-828A2E2D9DF5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FDC81CD6-9884-4245-A80E-828A2E2D9DF5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FDC81CD6-9884-4245-A80E-828A2E2D9DF5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{892AE768-09B7-48F8-A864-728AB9EA4C78}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{892AE768-09B7-48F8-A864-728AB9EA4C78}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{892AE768-09B7-48F8-A864-728AB9EA4C78}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{892AE768-09B7-48F8-A864-728AB9EA4C78}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
