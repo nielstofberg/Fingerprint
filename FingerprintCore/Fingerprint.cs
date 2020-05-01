@@ -16,7 +16,7 @@ namespace FingerprintCore
 
         public bool IsInitialised { get; private set; }
 
-        public string SerialPortName { get; set; }
+        public string SerialPortName { get; set; } = "/dev/serial0";
 
         public Fingerprint()
         {
@@ -43,10 +43,11 @@ namespace FingerprintCore
             }
             if (!validsp) return;
 
-            //Selected serialport is valid
-            _sps = new SerialDevice("/dev/serial0", BaudRate.B57600);
-            _sps.DataReceived += Sps_DataReceived;
+            WiringPi.SetBaudRate(SerialPortName, 57600);
 
+            //Selected serialport is valid
+            _sps = new SerialDevice(SerialPortName, BaudRate.B57600);            
+            _sps.DataReceived += Sps_DataReceived;
             try
             {
                 _sps.Open();
@@ -103,7 +104,10 @@ namespace FingerprintCore
                     return Task.FromResult(false);
                 }
             }
-            catch { }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Varify Password Failed: {ex.Message}");
+            }
 
             _wiating = false;
             return Task.FromResult(false);
