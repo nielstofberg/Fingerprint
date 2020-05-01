@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace FingerPrintApi.Services
+namespace FingerprintApi.Services
 {
     public interface IFingerprintService
     {

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using FingerPrintApi.Services;
+using FingerprintApi.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -11,7 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace FingerPrintApi
+namespace FingerprintApi
 {
     public class Startup
     {
@@ -47,8 +47,10 @@ namespace FingerPrintApi
 
             services.AddSingleton<IFingerprintService, FingerprintService>(c =>
             {
+                string portName = "/dev/serial0"; // "/dev/ttyS0","/dev/ttyAMA0","/dev/serial1","/dev/serial0"
+                Console.WriteLine($"Creating Fingerprint service (Serial {portName})");
                 var fps = new  FingerprintService();
-                fps.Fingerprint.SerialPortName = "/dev/serial0";
+                fps.Fingerprint.SerialPortName = portName;
                 return fps;
             });
 

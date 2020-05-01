@@ -17,7 +17,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "FingerPrintApi": {
+    "FingerprintApi": {
       "commandName": "Project",
       "launchBrowser": true,
       "launchUrl": "api/values",

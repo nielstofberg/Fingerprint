@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.IO.Ports;
 using System.Linq;
 using System.Threading.Tasks;
-using FingerPrintApi.Services;
+using FingerprintApi.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace FingerPrintApi.Controllers
+namespace FingerprintApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -45,8 +45,13 @@ namespace FingerPrintApi.Controllers
             }
             else
             {
+                Console.WriteLine("Place finger on reader to identify");
                 bool varify = await _fps.Fingerprint.VarifyPasswordAsync();
-                if (!varify) return false;
+                if (!varify)
+                {
+                    Console.WriteLine("Password authentication failed");
+                    return false;
+                }
 
                 var usr = await _fps.Fingerprint.IdentifyFingerprint();
                 return usr;
