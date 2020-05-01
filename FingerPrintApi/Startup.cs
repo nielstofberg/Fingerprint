@@ -47,6 +47,7 @@ namespace FingerprintApi
 
             services.AddSingleton<IFingerprintService, FingerprintService>(c =>
             {
+                // This port name is correct for Pi 3 and 4 running Raspian Buster
                 string portName = "/dev/serial0"; // "/dev/ttyS0","/dev/ttyAMA0","/dev/serial1","/dev/serial0"
                 Console.WriteLine($"Creating Fingerprint service (Serial {portName})");
                 var fps = new  FingerprintService();
