@@ -26,22 +26,14 @@ namespace FingerprintApi.Controllers
 
         // GET: api/Fingerprint
         [HttpGet]
-        public async Task<object> GetAsync(int? step, int? id)
+        public async Task<object> GetAsync(bool count=false)
         {
             List<object> ret = new List<object>();
-            if (step == 1)
+            if (count )
             {
-                bool s = await _fps.Fingerprint.EnrollStep1();
-                ret.Add(s);
-            }
-            else if (step == 2)
-            {
-                if (id == null || id == 0 || id > 1000)
-                {
-                    id = await _fps.Fingerprint.GetTemplateCount() + 1;
-                }
-                bool s = await _fps.Fingerprint.EnrollStep2((int)id);
-                ret.Add(s);
+                Console.WriteLine("Get FP count");
+                int s = await _fps.Fingerprint.GetTemplateCount();
+                return s;
             }
             else
             {
@@ -56,21 +48,31 @@ namespace FingerprintApi.Controllers
                 var usr = await _fps.Fingerprint.IdentifyFingerprint();
                 return usr;
             }
-            return false;
         }
 
-
-        // GET: api/Fingerprint/5
-        [HttpGet("{id}", Name = "Get")]
-        public string Get(int id)
-        {
-            return "value";
-        }
 
         // POST: api/Fingerprint
         [HttpPost]
-        public void Post([FromBody] string value)
+        public async Task<bool> Post(int step, int? id)
         {
+            Console.WriteLine("POST: api/Fingerprint");
+            List<object> ret = new List<object>();
+            if (step == 1)
+            {
+                Console.WriteLine("Enroll step1");
+                bool s = await _fps.Fingerprint.EnrollStep1();
+                return s;
+            }
+            else if (step == 2)
+            {
+                if (id == null || id == 0 || id > 1000)
+                {
+                    return false;
+                }
+                bool s = await _fps.Fingerprint.EnrollStep2((int)id);
+                return s;
+            }
+            return false;
         }
 
         // PUT: api/Fingerprint/5

@@ -71,7 +71,7 @@ namespace FingerprintCore
 
             if (_wiating)
             {
-                Console.WriteLine($"Received: {str}");
+                //Console.WriteLine($"Received: {str}");
 
                 _inBuff.AddRange(arg2);
 
@@ -143,7 +143,7 @@ namespace FingerprintCore
         }
 
         /// <summary>
-        /// Create a new fingerprint
+        /// Part 1 of registering a new fingerprint
         /// </summary>
         /// <returns></returns>
         public Task<bool> EnrollStep1()
@@ -163,6 +163,15 @@ namespace FingerprintCore
             return Task.FromResult(false);
         }
 
+        /// <summary>
+        /// Part 2 of enrilling a new fingerprint.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        /// <remarks>
+        /// Note, if the new model is found in memory the existing 
+        /// model will be deleted after the new one is stored
+        /// </remarks>
         public Task<bool> EnrollStep2(int id)
         {
             Console.WriteLine("Enroll step2");
@@ -175,8 +184,16 @@ namespace FingerprintCore
                     {
                         if (CreateModel())
                         {
+                            int oldId, score;
+                            bool del = FastSearch(out oldId, out score);
+
                             if (StoreModel(id))
                             {
+                                if (del && oldId != id)
+                                {
+                                    //Delete Old model, if there is one, after saving the new one.
+                                    DeleteModel(oldId);
+                                }
                                 return Task.FromResult(true);
                             }
                         }
@@ -235,6 +252,7 @@ namespace FingerprintCore
                 {
                     return true;
                 }
+
             }
             catch { }
 
@@ -343,6 +361,30 @@ namespace FingerprintCore
             return false;
         }
 
+        /// <summary>
+        /// Deletes a fingerprint model at a specific location
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        private bool DeleteModel(int id)
+        {
+            try
+            {
+                Console.WriteLine($"Delete FP ID {id}");
+                SendCommand(FingerprintCommand.DELETE, new byte[] { (byte)(id >> 8), (byte)(id & 0xff), 0x00, 0x01 });
+                var reply = GetReply();
+                if (reply != null &&
+                    reply.Pid == PacketIdentifier.ACKPACKET &&
+                    reply.ConfCode == ConfirmationCode.ExeComplete)
+                {
+                    return true;
+                }
+            }
+            catch { }
+
+            _wiating = false;
+            return false;
+        }
 
         /// <summary>
         /// Send a command to the module
@@ -351,6 +393,7 @@ namespace FingerprintCore
         /// <param name="data"></param>
         private void SendCommand(FingerprintCommand cmd, byte[] data)
         {
+            Console.WriteLine($"Command {cmd.ToString()}");
             FingerPrintProtocol fp = new FingerPrintProtocol(cmd, data);
             _newPacket = false;
             _wiating = true;
@@ -371,6 +414,10 @@ namespace FingerprintCore
                 {
                     _wiating = false;
                     var fpReply = FingerPrintProtocol.Parse(_inBuff.ToArray());
+                    if (fpReply != null)
+                    {
+                        Console.WriteLine($"Reply {fpReply.ConfCode.ToString()}");
+                    }
                     return fpReply;
                 }
                 Thread.Sleep(1);
